@@ -15,6 +15,12 @@
 #define GCN_WIFI3_SSID "your_wifi_name3"
 #define GCN_WIFI3_PASS "your_wifi_password3"
 
+// OPTIONAL: to use static IP configuration instead of DHCP discover
+// #define GCN_STATIC_IP_ADDRESS (192, 168, 1, 123)
+// #define GCN_STATIC_IP_GATEWAY (192, 168, 1, 254)
+// #define GCN_STATIC_IP_NETMASK (255, 255, 255, 0)
+// #define GCN_STATIC_IP_DNS (192, 168, 1, 1)
+
 // Change according to your MQTT connection
 // See https://test.mosquitto.org for the various setups
 #define GCN_MQTT_BROKER_DNS_NAME "test.mosquitto.org"

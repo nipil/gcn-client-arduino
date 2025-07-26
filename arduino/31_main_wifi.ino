@@ -113,6 +113,15 @@ void MainStateMachine::state_wifi_try_config_enter() {
   Serial.println();
 #endif  // GCN_DEBUG_WIFI_STATUS_CHANGES
   last_wifi_begin_ms = millis();
+  // actual wifi setup
+  WiFi.mode(WIFI_STA);
+#if defined(GCN_STATIC_IP_ADDRESS) && defined(GCN_STATIC_IP_GATEWAY) && defined(GCN_STATIC_IP_NETMASK) && defined(GCN_STATIC_IP_DNS)
+  IPAddress static_ip_address(GCN_STATIC_IP_ADDRESS);
+  IPAddress static_ip_gateway(GCN_STATIC_IP_GATEWAY);
+  IPAddress static_ip_netmask(GCN_STATIC_IP_NETMASK);
+  IPAddress static_ip_dns(GCN_STATIC_IP_DNS);
+  WiFi.config(static_ip_address, static_ip_gateway, static_ip_netmask, static_ip_dns);
+#endif  // GCN_STATIC_IP_ADDRESS && GCN_STATIC_IP_GATEWAY && GCN_STATIC_IP_NETMASK && GCN_STATIC_IP_DNS
   WiFi.begin(credential->ssid, credential->password);
 }
 
