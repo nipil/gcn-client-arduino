@@ -549,13 +549,19 @@ void MainStateMachine::mqtt_flush_buffer_once(const char *gpio_name, GpioChangeB
   mqtt_publish_topic_string(pin_topic.c_str(), buf, true);
 }
 
+// This should be the only path through which you can *CLEANLY* disconnect from MQTT (for status correctness)
 void MainStateMachine::mqtt_disconnect_properly() {
+  // FIXME: until the "race" condition below is fixed, make this call a NO-OP
+  return;
   // disconnecting properly cancels the automatic use of will message
   // so that induces more work to setup the "offline" state than doing it "uncleanly"
   // howerver this is the "correct" way to behave, so do it proper.
   // SO, deliberately send the will message, to inform that we are actually going offline !
   mqtt_publish_topic_string(mqtt_get_will_topic_utf8().c_str(), GCN_MQTT_BROKER_WILL_MESSAGE, true);
-  // as sending is synchronous with this library, no need to call for loop to flush it, and we can disconnect now
+  // FIXME: the PubSubClient client.publish() just pushes to the buffer, it actually does not send it ?!
+  // So disconnecting now actually disconnects cleanly, preventing the last will to apply,
+  // but the status update above would not be taken into account...
+  // So either exit uncleanly or wait until sent !
   mqtt_client.disconnect();
 }
 
